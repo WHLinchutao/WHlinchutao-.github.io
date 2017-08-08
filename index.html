@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>测试ECharts</title>
+		<script src="js/echarts.js"></script>
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+	    <style>
+	    	*{
+	    		margin: 0;
+	    		padding: 0;
+	    	}
+	    </style>
+	</head>
+
+	<body>
+		<div id="main" style="width: 1000px;height: 600px;"></div>
+		<div id="circle" style="width: 600px;height: 400px;"></div>
+		<script type="text/javascript">
+			var myChart = echarts.init(document.getElementById('main'));
+
+			var option = {
+				title: {
+					text: "马云和马化腾期末成绩图",
+					subtext: '本图表纯属虚构',
+				},
+				anmation: false,
+				legend: {
+					data: ["马云成绩", "马化腾成绩"],
+					left: '50%',
+					top: 5
+				},
+				tooltip: {
+					trigger: "axis"
+				},
+				xAxis: {
+					type: 'category',
+					boundaryGap: false,
+					data: ['语文', '数学', '英语', '历史', '体育', '生物', '化学']
+				},
+				yAxis: {
+					type: 'value',
+					axisLabel: {
+						
+					},
+					min: 20
+				},
+				//工具栏组件
+				toolbox: {
+					show: true,//用true显示工具栏
+					orient: 'vertical',//工具栏布局方向，vertical（竖向），horizontal（横向），默认是横向
+					itemSize: 20,//工具栏大小
+					itemGap: 20,//工具栏每个工具之间的距离
+
+					feature: {
+						//数据视图工具，展示图标所用的数据，编辑数据，将数据展示出来，可以设置数据为只读。
+						dataView: {
+							readOnly: true,
+							backgroundColor: '#f5f5f5',
+							optionToContent: function(opt) {
+								var axisData = opt.xAxis[0].data;
+								var series = opt.series;
+								var table = '<table style="width:100%;text-align:center;border:1px solid red;"><tbody><tr>' +
+									'<td>学生</td>' +
+									'<td>' + series[0].name + '</td>' +
+									'<td>' + series[1].name + '</td>' +
+									'</tr>';
+								for(var i = 0; i < axisData.length; i++) {
+									table += '<tr>' +
+										'<td>' + axisData[i] + '</td>' +
+										'<td>' + series[0].data[i] + '</td>' +
+										'<td>' + series[1].data[i] + '</td>' +
+										'</tr>'
+								}
+								table += '</tbody></table>';
+								return table;
+							}
+						},
+						//数据区域缩放，只支持直角坐标系的缩放
+						dataZoom: {
+							show: true,
+							xAxisIndex: [0, 3]
+						},
+						//切换为其他类型的图表转换
+						magicType: {
+							//曲线，圆柱体，堆，平面图
+							type: ['line', 'bar', 'stack', 'tiled']
+						},
+						//还原配置
+						restore: {},
+						//保存图片
+						saveAsImage: {},
+						myTool1: {
+							show: true,
+							title: '自定义工具一',
+							icon: 'path://M432.45,595.444c0,2.177-4.661,6.82-11.305,6.82c-6.475,0-11.306-4.567-11.306-6.82s4.852-6.812,11.306-6.812C427.841,588.632,432.452,593.191,432.45,595.444L432.45,595.444z M421.155,589.876c-3.009,0-5.448,2.495-5.448,5.572s2.439,5.572,5.448,5.572c3.01,0,5.449-2.495,5.449-5.572C426.604,592.371,424.165,589.876,421.155,589.876L421.155,589.876z M421.146,591.891c-1.916,0-3.47,1.589-3.47,3.549c0,1.959,1.554,3.548,3.47,3.548s3.469-1.589,3.469-3.548C424.614,593.479,423.062,591.891,421.146,591.891L421.146,591.891zM421.146,591.891',
+
+							onclick: function() {
+								alert("this is myTool1");
+							}
+						},
+						myTool2: {
+							show: true,
+							title: '自定义工具二',
+							icon: 'image://http://echarts.baidu.com/images/favicon.png',
+							onclick: function() {
+								alert("this is myTool2");
+							}
+						}
+
+					},
+
+				},
+				series: [{
+						name: '马云成绩',
+						type: 'line',
+						data: [90, 88, 75, 82, 95, 89, 97],
+						markLine: {
+							data: [{
+								type: 'average',
+								name: '平均值'
+							}]
+						},
+						markPoint: {
+							data: [{
+									type: 'max',
+									name: '最高分'
+								},
+								{
+									type: 'min',
+									name: '最低分'
+								}
+							]
+						}
+					},
+					{
+						name: '马化腾成绩',
+						type: 'line',
+						data: [55, 45, 99, 60, 35, 45, 74],
+						markLine: {
+							data: [{
+								type: 'average',
+								name: '平均值'
+							}]
+						},
+						markPoint: {
+							data: [{
+									type: 'max',
+									name: '最高分'
+								},
+								{
+									type: 'min',
+									name: '最低分'
+								}
+							]
+						}
+					}
+				]
+			}
+
+			myChart.setOption(option);
+			/* 
+		var myChart = echarts.init(document.getElementById("main"));
+     	 //打开loading动画
+        myChart.showLoading();
+   
+        myChart.setOption({
+            title:{
+                text:'ECharts 异步加载数据'
+            },
+            tooltip:{},
+            legend:{
+                data:['访问量']
+            },
+            xAxis:{
+                data:[]
+            },
+            yAxis:{},
+            series:[
+                {
+                    name:'访问量',
+                    type:'bar',
+                    data:[]
+                }
+            ]
+        })
+        function bindData(){
+        //异步加载数据
+        setTimeout(function(){  
+        $.get('data.json').done(function (data) {
+             myChart.hideLoading();
+            myChart.setOption({                
+                xAxis:{
+                    data:data.name
+                },                
+                series:[
+                    {    
+                        //根据名字对应到相应的系列
+                        name:"访问量",
+                        data:data.data
+                    }
+                ]
+            })
+        })
+        },2000)
+        }
+        bindData();  
+      
+       //初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    var base = + new Date(2017,4,8);
+    var oneDay = 24*3600*1000;
+    var date = [];
+    var data = [Math.random()*150];
+    var now = new Date(base);
+    var day = 30;
+    function addData(shift){
+        now = [now.getFullYear(),now.getMonth()+1,now.getDate()].join('/');        
+        date.push(now);        
+        data.push((Math.random()-0.5)*10+data[data.length-1]);
+        if (shift) {
+            console.log(data);
+            date.shift();
+            data.shift();
+        }
+        now = new Date(+new Date(now)+oneDay);        
+    }
+
+    for (var i = 0; i < day; i++) {
+        addData();
+    }
+    //设置图标配置项
+    myChart.setOption({
+        title:{
+            text:'ECharts 30天内数据实时更新'
+        },
+        xAxis:{
+            type:"category",
+            boundaryGap:false,
+            data:date
+        },
+        yAxis:{
+            boundaryGap:[0,'100%'],
+            type:'value'
+        },
+        series:[{
+            name:'成交',
+            type:'line',
+            smooth:true, //数据光滑过度
+            symbol:'none', //下一个数据点
+            stack:'a',
+            areaStyle:{
+                normal:{
+                    color:'#ddd'
+                }
+            },
+            data:data
+        }]
+    })
+    setInterval(function(){
+        addData(true);
+        myChart.setOption({
+            xAxis:{
+                data:date
+            },
+            series:[{
+                name:'成交',
+                data:data
+            }]
+        });
+    },1000)
+    */
+			var myChart1 = echarts.init(document.getElementById("circle"));
+			myChart1.setOption({
+				series: [{
+					name: '销量',
+					type: 'pie',
+					radius: '60%',
+					roseType: 'angle',
+					data: [{
+							value: 235,
+							name: '视频广告'
+						},
+						{
+							value: 274,
+							name: '联盟广告'
+						},
+						{
+							value: 310,
+							name: '邮件营销'
+						},
+						{
+							value: 335,
+							name: '直接访问'
+						},
+						{
+							value: 400,
+							name: '搜索引擎'
+						}
+					]
+				}]
+			});
+		</script>
+
+	</body>
+
+</html>
